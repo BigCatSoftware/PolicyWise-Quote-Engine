@@ -1,0 +1,51 @@
+# Original content from user is great, keeping it.
+HELP.md
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+# === Project-Specific Additions ===
+
+# Log files
+*.log
+*.log.*
+
+# Frontend (React/Vite) - Prevents uploading thousands of dependency files
+/frontend/node_modules/
+/frontend/dist/
+/frontend/.DS_Store
+
+# Python - Prevents uploading the virtual environment and compiled files
+/risk-analyzer/.venv/
+/risk-analyzer/venv/
+/risk-analyzer/__pycache__/
+/risk-analyzer/*.pyc
