@@ -1,49 +1,54 @@
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
 
-# Create an instance of teh FastAPI application
 app = FastAPI(
-    title = "PolicyWise Risk Analyzer",
-    description = "A simple API to calculate an insurance risk score.",
-    version = "1.0.0"
+    title="PolicyWise Risk Analyzer",
+    description="An API to calculate an insurance quote based on vehicle and location data.",
+    version="2.1.0" # Version bump
 )
 
-# Define the data structure expected in a request.
-# Using Pydantic's BaseModel gives us automatic data validation.
-# If a request comes in with the wrong sdata types, FastAPI will
-# automatically send back a helpful error message.
-class QuoteRequest(BaseModel):
-    age: int = Field(..., description="The age of the driver.", ge=16)
-    vehicle_year: int = Field(..., description="The manufacturing year of the vehicle.", gt=1980)
-    driving_record_points: int = Field(..., description="Number of points on the driving record.", ge=0)
+class DetailedQuoteRequest(BaseModel):
+    state: str
+    vehicle_make: str = Field(..., alias='vehicleMake')
+    vehicle_model: str = Field(..., alias='vehicleModel')
+    vehicle_color: str = Field(..., alias='vehicleColor')
 
-# Define the data structure for our API's response.
-class RiskResponse(BaseModel):
-    risk_score: int
+class QuoteBreakdownResponse(BaseModel):
+    base_premium: float
+    state_adjustment: float
+    make_adjustment: float
+    model_surcharge: float
+    final_premium: float
 
-# Create the API endpoint using a decorator.
-# @app.post tells FastAPI to create a POST endpoint at the URL "/analyze-risk".
-# It will automatically handle converting the incoming JSON into our QuoteRequest object.
-@app.post("/analyze-risk", response_model=RiskResponse)
-def analyze_risk(request: QuoteRequest):
+HIGH_RISK_STATES = {"California": 1.5, "New York": 1.4, "Florida": 1.3}
+MAKE_MULTIPLIERS = {"BMW": 1.8, "Ford": 1.1, "Chevrolet": 1.1, "Toyota": 1.0, "Honda": 1.0, "Nissan": 1.1}
+SPORT_MODEL_SURCHARGE_VAL = 25.0
+
+@app.post("/calculate-quote", response_model=QuoteBreakdownResponse)
+def calculate_quote(request: DetailedQuoteRequest):
     """
-    Analyzes driver and vehicle data to produce a simple risk score.
-    - Younger drivers have a higher base score.
-    - Older cars add to the risk.
-    - Driving record points significantly increase the risk.
+    Calculates a monthly insurance premium and its breakdown.
     """
-    # Implement our simple "risk model" logic.
-    risk_score = 100  # Start with a base score
+    base_premium = 100.0
 
-    if request.age < 25:
-        risk_score += 50
+    # Calculate adjustments
+    state_multiplier = HIGH_RISK_STATES.get(request.state, 1.0)
+    state_adjustment = base_premium * (state_multiplier - 1.0)
 
-    if request.vehicle_year < 2010:
-        risk_score += 30
+    make_multiplier = MAKE_MULTIPLIERS.get(request.vehicle_make, 1.2)
+    make_adjustment = (base_premium + state_adjustment) * (make_multiplier - 1.0)
 
-    # Add 20 points for each point on the driving record
-    risk_score += (request.driving_record_points * 20)
+    model_surcharge = 0.0
+    if request.vehicle_model in ["Mustang", "Camaro", "M3"]:
+        model_surcharge = SPORT_MODEL_SURCHARGE_VAL
 
-    # Return the result. FastAPI will automatically convert this
-    # dictionary into a JSON response that matches our RiskResponse model.
-    return {"risk_score": risk_score}
+    # Calculate final premium
+    final_premium = base_premium + state_adjustment + make_adjustment + model_surcharge
+
+    return {
+        "base_premium": round(base_premium, 2),
+        "state_adjustment": round(state_adjustment, 2),
+        "make_adjustment": round(make_adjustment, 2),
+        "model_surcharge": round(model_surcharge, 2),
+        "final_premium": round(final_premium, 2)
+    }

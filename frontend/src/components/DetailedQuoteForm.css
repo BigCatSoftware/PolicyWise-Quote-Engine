@@ -1,0 +1,75 @@
+.detailed-quote-form {
+  width: 100%;
+  max-width: 550px; /* A bit wider for a more substantial feel */
+  padding: 2rem;
+  transition: all 0.3s ease-in-out;
+}
+
+.detailed-quote-form h2 {
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  font-size: 2.5rem; /* Slightly larger */
+  font-weight: 400;
+  text-align: left;
+  margin-bottom: 0.5rem;
+  color: #171717;
+}
+
+.detailed-quote-form .form-description {
+  text-align: left;
+  color: #525252;
+  margin-bottom: 3rem; /* More space before the form fields */
+  font-size: 1.125rem; /* lg */
+}
+
+/* Add a little animation to the dropdowns */
+.input-wrapper select.input {
+  cursor: pointer;
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.detailed-quote-form .btn {
+  width: 100%;
+  margin-top: 2rem; /* More space before the button */
+  padding: 16px 32px; /* A larger button */
+  font-size: 1rem; /* base */
+}
+
+/* Quote Result Display */
+.quote-result-container {
+  text-align: center;
+  padding: 2rem;
+  width: 100%;
+  max-width: 550px;
+}
+
+.quote-result-container h3 {
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  font-size: 2.5rem;
+  font-weight: 400;
+  margin-bottom: 1rem;
+}
+
+.quote-result-container p {
+  color: #525252; /* text.secondary */
+  font-size: 1.125rem; /* lg */
+  margin-bottom: 1.5rem;
+}
+
+.quote-amount {
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  font-size: 4.5rem; /* 7xl */
+  font-weight: 500; /* medium */
+  color: #8a5e47; /* primary.700 */
+  margin-bottom: 1.5rem;
+}
+
+.quote-disclaimer {
+  font-size: 0.75rem !important; /* xs */
+  color: #a3a3a3 !important; /* neutral.400 */
+  margin-bottom: 2rem !important;
+}
+
+.quote-result-container .btn.secondary {
+  width: auto;
+  padding: 12px 32px;
+}
